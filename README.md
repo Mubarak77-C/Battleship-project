@@ -1,6 +1,7 @@
 # 🚢 Battleship Game (Vanilla JavaScript & Vite)
 
 A fully tested, object-oriented, turn-based **Battleship** game built from scratch using **Test-Driven Development (TDD)** with **Vitest**, bundled with **Vite**, and styled with clean, modular CSS.
+live link : https://mubarak77-c.github.io/Battleship-project/
 
 ---
 
