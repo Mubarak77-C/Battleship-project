@@ -67,3 +67,34 @@ export function Gameboard() {
     },
   };
 }
+
+export function Player(type = "real") {
+  const gameboard = Gameboard();
+
+  return {
+    type,
+    gameboard,
+
+    attack(enemyBoard, coord) {
+      if (type === "real") {
+        if (!coord) return;
+        enemyBoard.receiveAttack(coord);
+      } else if (type === "computer") {
+        // Generate unique random coordinates [0-9, 0-9] that haven't been attacked yet
+        const attackedSet = new Set(
+          enemyBoard.attacks.map((c) => `${c[0]},${c[1]}`),
+        );
+
+        let x, y, coordKey;
+        do {
+          x = Math.floor(Math.random() * 10);
+          y = Math.floor(Math.random() * 10);
+          coordKey = `${x},${y}`;
+        } while (attackedSet.has(coordKey));
+
+        enemyBoard.receiveAttack([x, y]);
+        return [x, y];
+      }
+    },
+  };
+}
