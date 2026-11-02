@@ -98,3 +98,69 @@ export function Player(type = "real") {
     },
   };
 }
+
+//controller
+export function GameController() {
+  const player1 = Player("real");
+  const player2 = Player("computer"); // Can be changed to "real" for 2-player hotseat later
+
+  let activePlayer = player1;
+  let winner = null;
+
+  function getCurrentPlayer() {
+    return activePlayer;
+  }
+
+  function getOpponent() {
+    return activePlayer === player1 ? player2 : player1;
+  }
+
+  function switchTurn() {
+    activePlayer = activePlayer === player1 ? player2 : player1;
+  }
+
+  function playRound(coord) {
+    if (winner) return; // Game is already over
+
+    const attacker = activePlayer;
+    const opponent = getOpponent();
+
+    // 1. Current player attacks opponent's board
+    attacker.attack(opponent.gameboard, coord);
+
+    // 2. Check if opponent's ships are all sunk
+    if (opponent.gameboard.allSunk()) {
+      winner = attacker;
+      return;
+    }
+
+    // 3. Switch turn
+    switchTurn();
+
+    // 4. If the new active player is a computer, make it attack automatically
+    if (activePlayer.type === "computer" && !winner) {
+      activePlayer.attack(player1.gameboard);
+
+      if (player1.gameboard.allSunk()) {
+        winner = activePlayer;
+        return;
+      }
+
+      // Switch back to human player
+      switchTurn();
+    }
+  }
+
+  function getWinner() {
+    return winner;
+  }
+
+  return {
+    player1,
+    player2,
+    getCurrentPlayer,
+    getOpponent,
+    playRound,
+    getWinner,
+  };
+}
